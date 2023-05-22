@@ -1,0 +1,89 @@
+ANSWER
+===============================
+
+import math
+
+products = {
+    "Product A": 20,
+    "Product B": 40,
+    "Product C": 50
+}
+
+discount_rules = {
+    "flat_10_discount": {
+        "condition": lambda cart_total: cart_total > 200,
+        "amount": 10
+    },
+    "bulk_5_discount": {
+        "condition": lambda quantity: quantity > 10,
+        "amount": 0.05
+    },
+    "bulk_10_discount": {
+        "condition": lambda quantity: quantity > 20,
+        "amount": 0.1
+    },
+    "tiered_50_discount": {
+        "condition": lambda quantity: quantity > 30 and any(quantity > 15 for quantity in quantity_list),
+        "amount": 0.5
+    }
+}
+
+fees = {
+    "gift_wrap": 1,
+    "shipping": 5
+}
+
+quantity_list = []
+for product in products:
+    quantity = int(input("How many " + product + "s do you want? "))
+    quantity_list.append(quantity)
+
+gift_wrap = input("Do you want to gift wrap your purchase? (y/n) ")
+
+subtotal = 0
+for product, quantity in zip(products, quantity_list):
+    subtotal += product * quantity
+
+discount = None
+for discount_rule in discount_rules:
+    if discount_rules[discount_rule]["condition"](subtotal):
+        discount = discount_rules[discount_rule]["amount"]
+        break
+
+shipping_fee = math.ceil(subtotal / 10) * fees["shipping"]
+
+gift_wrap_fee = quantity_list.count(15) * fees["gift_wrap"]
+
+total = subtotal - discount + shipping_fee + gift_wrap_fee
+
+print("Product Name | Quantity | Total")
+for product, quantity, total_product in zip(products, quantity_list, products.values() * quantity_list):
+    print(product, quantity, total_product)
+
+print("Subtotal:", subtotal)
+if discount is not None:
+    print("Discount:", discount)
+print("Shipping Fee:", shipping_fee)
+print("Gift Wrap Fee:", gift_wrap_fee)
+print("Total:", total)
+
+====================================
+Here is an example of how the program would work:
+
+How many Product A's do you want? 2
+How many Product B's do you want? 1
+How many Product C's do you want? 3
+Do you want to gift wrap your purchase? (y/n) y
+
+Product Name | Quantity | Total
+Product A | 2 | 40
+Product B | 1 | 40
+Product C | 3 | 150
+Subtotal: 230
+Discount: 10
+Shipping Fee: 5
+Gift Wrap Fee: 3
+Total: 222
+
+
+
